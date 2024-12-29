@@ -2,12 +2,12 @@ version: '3.8'
 
 services:
   app:
-    image: php:8.2.27-fpm
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: laravel_app
     volumes:
       - .:/var/www/html
-      - ./nginx/php/php.ini:/usr/local/etc/php/php.ini # Optional jika ada konfigurasi PHP khusus
-    working_dir: /var/www/html
     networks:
       - laravel
     depends_on:
