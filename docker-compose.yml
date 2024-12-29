@@ -12,7 +12,8 @@ services:
       - laravel
     depends_on:
       - db
-
+    command: sh -c "php artisan migrate --force && php-fpm"
+  
   webserver:
     image: nginx:latest
     container_name: laravel_webserver
@@ -30,8 +31,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: boilerplate
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+      MYSQL_USER: boilerplate
+      MYSQL_PASSWORD: boilerplate
     volumes:
       - db_data:/var/lib/mysql
     networks:

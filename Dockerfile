@@ -34,7 +34,6 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 
 # Membuat File Env di docker container
 RUN cp .env.example .env
-RUN php artisan migrate:refresh --seed
 
 # Generate key Laravel
 # RUN php artisan key:generate
