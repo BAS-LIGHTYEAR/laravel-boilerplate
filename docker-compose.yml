@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  app:
+    image: php:8.2.27-fpm
+    container_name: laravel_app
+    volumes:
+      - .:/var/www/html
+      - ./nginx/php/php.ini:/usr/local/etc/php/php.ini # Optional jika ada konfigurasi PHP khusus
+    working_dir: /var/www/html
+    networks:
+      - laravel
+    depends_on:
+      - db
+
+  webserver:
+    image: nginx:latest
+    container_name: laravel_webserver
+    volumes:
+      - .:/var/www/html
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 8080:80
+    networks:
+      - laravel
+
+  db:
+    image: mysql:8.0
+    container_name: laravel_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: boilerplate
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - laravel
+
+volumes:
+  db_data:
+
+networks:
+  laravel:
