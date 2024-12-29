@@ -1,66 +1,92 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Docker dan **Docker Compose** terinstal pada sistem Anda.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+1. Repository proyek Laravel yang sudah mendukung Docker.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Langkah-langkah Menjalankan Laravel dengan Docker
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 1. Clone Proyek Laravel
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Clone repository proyek Laravel Anda:
 
-## Learning Laravel
+```bash
+git clone <repository-url>
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Masuk ke direktori proyek:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+cd nama-proyek
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 2. Periksa File Docker yang Ada
 
-## Laravel Sponsors
+Pastikan file `Dockerfile` dan `docker-compose.yml` sudah ada di root direktori proyek Anda. Jika ya, periksa isinya untuk memastikan konfigurasi sudah sesuai dengan kebutuhan Anda.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 3. Sesuaikan Konfigurasi Laravel
 
-### Premium Partners
+Periksa file `.env` dan sesuaikan pengaturan database sesuai dengan konfigurasi di `docker-compose.yml`. Contoh:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+```env
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=laravel
+DB_PASSWORD=secret
+```
 
-## Contributing
+### 4. Bangun dan Jalankan Container
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Jalankan perintah berikut untuk membangun dan menjalankan container:
 
-## Code of Conduct
+```bash
+docker-compose up -d --build
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 5. Migrasi Database
 
-## Security Vulnerabilities
+Masuk ke container aplikasi dan jalankan migrasi:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+docker exec -it laravel_app bash
+php artisan migrate
+```
 
-## License
+### 6. Akses Aplikasi
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Buka browser Anda dan akses: [http://localhost:8000](http://localhost:8000)
+
+---
+
+## Troubleshooting
+
+1. **File Permissions:**
+   Jika terjadi masalah dengan permissions, coba jalankan perintah berikut di container aplikasi:
+
+    ```bash
+    chmod -R 777 storage bootstrap/cache
+    ```
+
+2. **Service Tidak Terhubung:**
+   Pastikan Anda sudah memulai semua service dengan `docker-compose up -d`.
+
+3. **Environment Variable Tidak Terdeteksi:**
+   Pastikan `.env` sudah disalin dan sesuai di direktori proyek.
+
+---
+
+## Penghentian dan Pembersihan
+
+Untuk menghentikan semua container:
+
+```bash
+docker-compose down
+```
+
+Untuk menghapus volume:
+
+```bash
+docker-compose down -v
+```
